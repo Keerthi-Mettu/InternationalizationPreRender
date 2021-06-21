@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Microsoft.JSInterop;
+@using System.Globalization;
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager NavManager;
+
+
+<strong>Culture:</strong>
+<select class="form-control" @bind="Culture" style="width:200px; margin-right:10px;">
+    <option value="en-CA">English</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">German</option>
+</select>
+
+
+@code{
+
+
+    CultureInfo Culture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+
+            if (CultureInfo.CurrentCulture != value)
+            {
+                Console.WriteLine(value.Name);
+                var js = (IJSInProcessRuntime)JSRuntime;
+                js.InvokeVoid("blazorCulture.set", value.Name);
+                NavManager.NavigateTo(NavManager.Uri, forceLoad: true);
+            }
+        }
+    }
+
+}
